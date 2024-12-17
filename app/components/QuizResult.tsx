@@ -1,15 +1,50 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { scoreService } from '../services/scoreService';
 import Link from 'next/link';
+import { QuizFeedback } from './QuizFeedBack';
 
 type QuizResultProps = {
   score: number;
   totalQuestions: number;
   onReview: () => void;
   onRetry: () => void;
+};
+
+
+// 星の図形コンポーネント
+const StarShape: React.FC<{ filled?: boolean }> = ({ filled = false }) => (
+  <svg 
+    className={`w-8 h-8 transition-all duration-300 ${
+      filled ? 'text-yellow-400 animate-[tada_1s_ease-in-out]' : 'text-blue-200'
+    }`} 
+    viewBox="0 0 24 24"
+  >
+    <path
+      fill="currentColor"
+      d="M12 2L9.1 8.6 2 9.5l5 4.8L5.8 22 12 18.6l6.2 3.4-1.2-7.7 5-4.8-7.1-0.9z"
+    />
+  </svg>
+);
+
+// FloatingStarアニメーションコンポーネント
+const FloatingStar: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
+  const randomRotation = Math.random() * 360;
+  const randomScale = 0.5 + Math.random() * 0.5; // 0.5 ~ 1.0のランダムなサイズ
+
+  return (
+    <div
+      className="floating-star absolute pointer-events-none"
+      style={{
+        ...style,
+        transform: `translate(-50%, -50%) rotate(${randomRotation}deg) scale(${randomScale})`,
+      }}
+    >
+      <StarShape filled />
+    </div>
+  );
 };
 
 export const QuizResult: React.FC<QuizResultProps> = ({
@@ -22,6 +57,20 @@ export const QuizResult: React.FC<QuizResultProps> = ({
   const [playerName, setPlayerName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const percentage = Math.round((score / totalQuestions) * 100);
+  const [ratings, setRatings] = useState({ average: 0, count: 0, distribution: {} });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const stats = await scoreService.getFeedbackStats();
+        setRatings(stats.ratings);
+      } catch (error) {
+        console.error('評価の取得に失敗:', error);
+      }
+    };
+    fetchRatings();
+  }, []);
 
   // スコアに基づくフィードバックを取得
   const getScoreFeedback = () => {
@@ -64,7 +113,7 @@ export const QuizResult: React.FC<QuizResultProps> = ({
   const feedback = getScoreFeedback();
 
   const handleSaveScore = async () => {
-    if (!playerName.trim()) return;
+    if (!playerName.trim() || isSubmitted) return;
     
     setIsSaving(true);
     try {
@@ -75,7 +124,7 @@ export const QuizResult: React.FC<QuizResultProps> = ({
         percentage,
         timestamp: Date.now()
       });
-      router.push('/ranking');
+      setIsSubmitted(true);
     } catch (error) {
       console.error('スコアの保存に失敗しました:', error);
     } finally {
@@ -84,91 +133,87 @@ export const QuizResult: React.FC<QuizResultProps> = ({
   };
 
   return (
-    <div className="animate-fade-in max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8">
-      <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
-        クイズ終了！
-      </h2>
-      
-      {/* スコア表示部分 */}
-      <div className={`relative mb-8 ${feedback.bgColor} rounded-2xl border-2 ${feedback.borderColor} p-6`}>
-        <div className="text-center">
-          <div className="text-7xl font-bold mb-2 flex items-center justify-center">
-            <span className={`mr-2 ${feedback.color}`}>{score}</span>
-            <span className="text-4xl text-gray-400">/ {totalQuestions}</span>
-          </div>
-          <div className="text-xl text-gray-600 mb-4">
-            正答率: <span className="font-semibold">{percentage}%</span>
-          </div>
-          <div className={`text-2xl font-bold ${feedback.color} flex items-center justify-center gap-2`}>
-            <span>{feedback.emoji}</span>
-            <span>{feedback.message}</span>
-          </div>
+    <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8">
+      {/* スコアと結果表示 */}
+      <div className="text-center">
+        <div className="text-7xl font-bold mb-2 flex items-center justify-center">
+          <span className={`mr-2 ${feedback.color}`}>{score}</span>
+          <span className="text-4xl text-gray-400">/ {totalQuestions}</span>
+        </div>
+        <div className="text-xl text-gray-600 mb-4">
+          正答率: <span className="font-semibold">{percentage}%</span>
+        </div>
+        <div className={`text-2xl font-bold ${feedback.color} flex items-center justify-center gap-2`}>
+          <span>{feedback.emoji}</span>
+          <span>{feedback.message}</span>
         </div>
       </div>
 
-      {/* 名前入力とスコア保存 */}
-      <div className="space-y-4 mb-8">
-        <div>
-          <input
-            type="text"
-            placeholder="あなたの名前を入力"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full p-4 border-2 rounded-xl text-gray-700 placeholder-gray-400
-              focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent
-              transition-all duration-200"
-          />
+      {/* 前入力と提出 */}
+      <div className="mt-8 space-y-4">
+        <input
+          type="text"
+          value={playerName}
+          onChange={(e) => setPlayerName(e.target.value)}
+          placeholder="お名前を入力"
+          className="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-lg 
+            focus:outline-none focus:border-primary"
+        />
+        {isSubmitted ? (
+          <div className="w-full py-4 px-6 rounded-lg text-lg font-bold bg-green-50 text-green-600 border-2 border-green-200 text-center">
+            <span className="flex items-center justify-center gap-2">
+              <span>✅</span>
+              <span>提出完了！</span>
+            </span>
+          </div>
+        ) : (
           <button
             onClick={handleSaveScore}
-            disabled={isSaving || !playerName.trim()}
-            className={`w-full mt-2 px-4 py-2 
-              bg-primary text-white rounded-lg hover:bg-primary-dark
-              transition-all duration-200
-              ${!playerName.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-dark'}`}
+            disabled={!playerName.trim() || isSaving}
+            className={`w-full py-4 px-6 rounded-lg text-lg font-bold transition-all duration-200
+              ${playerName.trim() 
+                ? 'bg-gradient-to-r from-primary to-primary-hover text-white shadow-md ' +
+                  'hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 ' +
+                  'border-2 border-transparent hover:border-primary/20' 
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              }
+            `}
           >
-            {isSaving ? '保存中...' : '先生にテストを提出'}
+            {isSaving ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin">⏳</span> 送信中...
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <span>テストを提出する</span>
+                <span className="text-xl">→</span>
+              </span>
+            )}
           </button>
-        </div>
-      </div>
-
-      {/* アクション部分 */}
-      <div className="space-y-3">
-        <button
-          onClick={onReview}
-          className="w-full p-4 bg-white text-primary border-2 border-primary 
-            rounded-xl font-semibold hover:bg-primary/5 transition-all duration-200
-            flex items-center justify-center gap-2"
-        >
-          <span>解答・解説</span>
-        </button>
-
-        <button
-          onClick={onRetry}
-          className="w-full p-4 bg-white text-primary border-2 border-primary 
-            rounded-xl font-semibold hover:bg-primary/5 transition-all duration-200
-            flex items-center justify-center gap-2"
-        >
-          <span>もう一度挑戦する</span>
-        </button>
-
-        {score >= 10 ? (
-          <Link href="/ranking" className="block">
-            <button className="w-full p-4 bg-white text-primary border-2 border-primary
-              rounded-xl font-semibold hover:bg-primary/5 transition-all duration-200
-              flex items-center justify-center gap-2">
-              <span>成績優秀者一覧へ</span>
-            </button>
-          </Link>
-        ) : (
-          <Link href="/needs-study" className="block">
-            <button className="w-full p-4 bg-gradient-to-r from-blue-400 to-blue-500 
-              text-white rounded-xl font-semibold hover:from-blue-500 hover:to-blue-600 
-              transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-              <span>要復習者一覧へ</span>
-            </button>
-          </Link>
         )}
       </div>
+
+      {/* アクションボタン */}
+      <div className="mt-8 space-y-4">
+        <button onClick={onReview} className="w-full p-4 text-lg font-medium bg-white text-primary border-2 border-primary rounded-lg hover:bg-primary/5">
+          回答・解説を見る
+        </button>
+        <button onClick={onRetry} className="w-full p-4 text-lg font-medium bg-white text-gray-600 border-2 border-gray-300 rounded-lg hover:bg-gray-50">
+          もう一回挑戦する
+        </button>
+        <Link href="/needs-study" className="block w-full">
+          <button className="w-full p-4 text-lg font-medium bg-white text-red-500 border-2 border-red-200 rounded-lg hover:bg-red-50">
+            要復習者一覧を見る
+          </button>
+        </Link>
+      </div>
+
+      {/* フィードバックセクション */}
+      <QuizFeedback
+        ratings={ratings}
+        playerName={playerName}
+        onPlayerNameChange={setPlayerName}
+      />
     </div>
   );
 };

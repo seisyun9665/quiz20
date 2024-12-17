@@ -138,3 +138,53 @@ body {
   h2 { @apply text-xl sm:text-2xl; }
   /* ... */
 }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 既存のアニメーション定義に追加 */
+.animate-fade-up {
+  animation: fadeUp 0.3s ease-out forwards;
+}
+
+.animate-bounce-custom {
+  animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes floatingHeart {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.5);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -40px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -60px) scale(1);
+  }
+}
+
+.floating-heart {
+  animation: floatingHeart 1s ease-out forwards;
+  font-size: 1.5rem;
+  transform-origin: center;
+}
