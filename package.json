@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "add-test-data": "node --loader ts-node/esm scripts/addTestData.mts"
+    "add-test-data": "node --loader ts-node/esm scripts/addTestData.mts",
+    "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
     "firebase": "^11.1.0",

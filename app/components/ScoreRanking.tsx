@@ -109,7 +109,7 @@ export const ScoreRanking: React.FC = () => {
       )}
 
       <div className="mt-6 sm:mt-8 text-right text-xs sm:text-sm text-gray-600">
-        採点者：クイズマスター
+        採点者：クイズマスター清野
       </div>
     </div>
   );
