@@ -26,7 +26,7 @@ const Home: React.FC = () => {
                         <div className="space-y-4">
                             <Link href="/quiz" 
                                 className="block w-full p-4 text-lg font-medium bg-primary text-white rounded-lg 
-                                    hover:bg-primary-hover shadow-md hover:shadow-lg transition-all"
+                                    hover:bg-primary-hover hover:text-white shadow-md hover:shadow-lg transition-all"
                             >
                                 最初から始める
                             </Link>
