@@ -5,8 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #333333;
-  --primary: #4F46E5;
-  --primary-hover: #4338CA;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
   --success: #22c55e;
   --error: #ef4444;
 }
@@ -33,6 +33,12 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* 新しい高速バージョンのアニメーション */
+@keyframes fadeInFast {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes slideIn {
   from { transform: translateX(-20px); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
@@ -40,6 +46,10 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-fast {
+  animation: fadeInFast 0.15s ease-out forwards;
 }
 
 .animate-slide-in {
@@ -76,4 +86,55 @@ body {
   height: 100%;
   background: var(--primary);
   transition: width 0.3s ease;
+}
+
+/* ベーススタイルの設定 */
+@layer base {
+  body {
+    @apply text-gray-900 bg-gray-50;
+  }
+
+  /* 見出しのデフォルトスタイル */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-gray-900;
+  }
+
+  /* 段落のデフォルトスタイル */
+  p {
+    @apply text-gray-700;
+  }
+
+  /* リンクのデフォルトスタイル */
+  a {
+    @apply text-primary hover:text-primary-hover;
+  }
+
+  /* 入力フォームのデフォルトスタイル */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  textarea {
+    @apply bg-white text-gray-900 border border-gray-300 rounded-lg px-4 py-2
+    focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+
+  /* プレースホルダーのスタイル */
+  ::placeholder {
+    @apply text-gray-400;
+  }
+
+  /* 入力フォームが無効な場合のスタイル */
+  input:disabled,
+  textarea:disabled {
+    @apply bg-gray-100 cursor-not-allowed;
+  }
+
+  /* モバイルファースト */
+  body {
+    @apply text-base; /* 基本サイズを16pxに */
+  }
+  h1 { @apply text-2xl sm:text-3xl; }
+  h2 { @apply text-xl sm:text-2xl; }
+  /* ... */
 }
