@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { scoreService } from '../services/scoreService';
 
@@ -9,8 +9,26 @@ interface ScoreFormData {
   totalQuestions: string;
 }
 
+type FeedbackStats = {
+  ratings: {
+    average: number;
+    count: number;
+    distribution: { [key: number]: number };
+  };
+  comments: {
+    playerName: string;
+    comment: string;
+    timestamp: number;
+  }[];
+}
+
 export default function AdminPage() {
   const { user, loading, isAuthorized, signInWithGoogle, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState<'scores' | 'feedback'>('scores');
+  const [feedbackStats, setFeedbackStats] = useState<FeedbackStats>({
+    ratings: { average: 0, count: 0, distribution: {} },
+    comments: []
+  });
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<ScoreFormData>({
     playerName: '',
@@ -19,6 +37,28 @@ export default function AdminPage() {
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [successMessage, setSuccessMessage] = useState<string>('');
+
+  useEffect(() => {
+    const fetchFeedbackData = async () => {
+      if (!user || !isAuthorized) return;
+      
+      try {
+        const [ratingStats, commentStats] = await Promise.all([
+          scoreService.getFeedbackStats(),
+          scoreService.getFeedbackComments()
+        ]);
+        
+        setFeedbackStats({
+          ratings: ratingStats.ratings,
+          comments: commentStats.comments
+        });
+      } catch (error) {
+        console.error('フィードバックデータの取得に失敗:', error);
+      }
+    };
+
+    fetchFeedbackData();
+  }, [user, isAuthorized]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,6 +114,42 @@ export default function AdminPage() {
     }
   };
 
+  const renderFeedbackTab = () => (
+    <div className="space-y-6">
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h3 className="font-bold text-blue-800 mb-2">評価統計</h3>
+        <div className="text-blue-700">
+          <p>平均評価: {feedbackStats.ratings.average.toFixed(1)}</p>
+          <p>評価数: {feedbackStats.ratings.count}件</p>
+        </div>
+      </div>
+
+      <div className="bg-green-50 p-4 rounded-lg">
+        <h3 className="font-bold text-green-800 mb-4">ユーザーからの感想</h3>
+        <div className="space-y-4">
+          {feedbackStats.comments.map((comment, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
+              <div className="flex justify-between items-start">
+                <div className="font-medium text-gray-800">
+                  {comment.playerName || '匿名'}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {new Date(comment.timestamp).toLocaleString()}
+                </div>
+              </div>
+              <div className="mt-2 text-gray-600">{comment.comment}</div>
+            </div>
+          ))}
+          {feedbackStats.comments.length === 0 && (
+            <div className="text-gray-500 text-center py-4">
+              まだ感想はありません
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 py-8 px-4">
@@ -121,7 +197,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">スコア追加（開発用）</h1>
+          <h1 className="text-2xl font-bold text-gray-800">管理画面</h1>
           <button
             onClick={logout}
             className="text-sm text-gray-600 hover:text-gray-800"
@@ -134,58 +210,85 @@ export default function AdminPage() {
           ログイン中: {user.email}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              名前
-            </label>
-            <input
-              type="text"
-              name="playerName"
-              value={formData.playerName}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              スコア（0-20）
-            </label>
-            <input
-              type="number"
-              name="score"
-              value={formData.score}
-              onChange={handleChange}
-              min="0"
-              max="20"
-              className="w-full p-2 border rounded-lg"
-              required
-            />
-          </div>
-
-          {error && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg">
-              {error}
-            </div>
-          )}
-
-          {status === 'success' && (
-            <div className="p-3 bg-green-50 text-green-700 rounded-lg">
-              {successMessage}
-            </div>
-          )}
-
+        <div className="flex gap-2 mb-6">
           <button
-            type="submit"
-            disabled={status === 'loading'}
-            className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700
-              disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => setActiveTab('scores')}
+            className={`px-4 py-2 rounded-lg transition-all ${
+              activeTab === 'scores'
+                ? 'bg-primary text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
           >
-            {status === 'loading' ? '追加中...' : 'スコアを追加'}
+            スコア追加
           </button>
-        </form>
+          <button
+            onClick={() => setActiveTab('feedback')}
+            className={`px-4 py-2 rounded-lg transition-all ${
+              activeTab === 'feedback'
+                ? 'bg-primary text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            フィードバック
+          </button>
+        </div>
+
+        {activeTab === 'scores' ? (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                名前
+              </label>
+              <input
+                type="text"
+                name="playerName"
+                value={formData.playerName}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                スコア（0-20）
+              </label>
+              <input
+                type="number"
+                name="score"
+                value={formData.score}
+                onChange={handleChange}
+                min="0"
+                max="20"
+                className="w-full p-2 border rounded-lg"
+                required
+              />
+            </div>
+
+            {error && (
+              <div className="p-3 bg-red-50 text-red-700 rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {status === 'success' && (
+              <div className="p-3 bg-green-50 text-green-700 rounded-lg">
+                {successMessage}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700
+                disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {status === 'loading' ? '追加中...' : 'スコアを追加'}
+            </button>
+          </form>
+        ) : (
+          renderFeedbackTab()
+        )}
 
         <div className="mt-8 text-sm text-gray-500">
           ※ このページは開発用です

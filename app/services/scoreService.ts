@@ -196,5 +196,31 @@ export const scoreService = {
       console.error('評価の追加に失敗:', error);
       throw new Error('評価の保存中にエラーが発生しました');
     }
+  },
+
+  async getFeedbackComments(): Promise<{
+    comments: {
+      playerName: string;
+      comment: string;
+      timestamp: number;
+    }[];
+  }> {
+    try {
+      const feedbackRef = doc(db, 'feedback', 'stats');
+      const feedbackDoc = await getDoc(feedbackRef);
+      
+      if (feedbackDoc.exists()) {
+        const data = feedbackDoc.data();
+        return {
+          comments: data.comments || []
+        };
+      }
+      return {
+        comments: []
+      };
+    } catch (error) {
+      console.error('感想の取得に失敗:', error);
+      throw new Error('感想の取得中にエラーが発生しました');
+    }
   }
 };
