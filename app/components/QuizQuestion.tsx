@@ -7,10 +7,11 @@ type QuizQuestionProps = {
     options?: string[];
     showFeedback: boolean;
     isCorrect: boolean;
-    onAnswer: (answer: string) => void;
+    onAnswer: (answer: string, bool: boolean) => void;
     correctAnswer: string;
     explanation: string;
     onNext: () => void;
+    onSubmit: () => void;
 };
 
 export const QuizQuestion: React.FC<QuizQuestionProps> = ({
@@ -22,14 +23,20 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     isCorrect,
     correctAnswer,
     explanation,
-    onNext
+    onNext,
+    onSubmit
 }) => {
     const [textAnswer, setTextAnswer] = useState('');
     const [selfJudgment, setSelfJudgment] = useState<boolean | null>(null);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onAnswer(textAnswer);
+        onSubmit();
+    };
+
+    const handleAnswer = (bool: boolean) => {
+        onAnswer(textAnswer, bool);
+        setSelfJudgment(bool);
     };
 
     return (
@@ -71,14 +78,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                     </div>
                     <div className="flex gap-4">
                         <button
-                            onClick={() => setSelfJudgment(true)}
+                            onClick={() => handleAnswer(true)}
                             className="flex-1 p-4 text-lg font-medium bg-success text-white rounded-lg 
                                 hover:bg-success/90 shadow-md hover:shadow-lg transition-all"
                         >
                             正解！
                         </button>
                         <button
-                            onClick={() => setSelfJudgment(false)}
+                            onClick={() => handleAnswer(false)}
                             className="flex-1 p-4 text-lg font-medium bg-error text-white rounded-lg 
                                 hover:bg-error/90 shadow-md hover:shadow-lg transition-all"
                         >

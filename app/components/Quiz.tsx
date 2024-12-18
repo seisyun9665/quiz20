@@ -19,7 +19,7 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
     const [showFeedback, setShowFeedback] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showReview, setShowReview] = useState(false);
-    const [userAnswers, setUserAnswers] = useState<string[]>([]);
+    const [userAnswers, setUserAnswers] = useState<{ answer: string, isCorrect: boolean }[]>([]);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [showConfirmQuit, setShowConfirmQuit] = useState(false);
     const [isStarted, setIsStarted] = useState(true);
@@ -31,9 +31,16 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
         setIsStarted(true);
     };
 
-    const handleAnswer = (answer: string) => {
+    const handleSubmit = () => {
         setShowFeedback(true);
-        setUserAnswers([...userAnswers, answer]);
+    };
+
+    const handleAnswer = (answer: string, bool: boolean) => {
+        setUserAnswers(prevAnswers => {
+            const newAnswers = [...prevAnswers];
+            newAnswers[currentQuestionIndex] = { answer, isCorrect: bool };
+            return newAnswers;
+        });
     };
 
     const handleNext = () => {
@@ -69,7 +76,6 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
             <QuestionList
                 questions={quizData}
                 onStartFromQuestion={handleStartFromQuestion}
-                previousAnswers={userAnswers}
             />
         );
     }
@@ -140,6 +146,7 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
                         showFeedback={showFeedback}
                         isCorrect={isCorrect}
                         onAnswer={handleAnswer}
+                        onSubmit={handleSubmit}
                         onNext={handleNext}
                         correctAnswer={quizData[currentQuestionIndex].answer}
                         explanation={quizData[currentQuestionIndex].explanation}
@@ -147,7 +154,7 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
                 </>
             ) : (
                 <QuizResult 
-                    score={score}
+                    score={userAnswers.filter(answer => answer?.isCorrect ?? false).length}
                     totalQuestions={quizData.length}
                     onReview={() => setShowReview(true)}
                     onRetry={() => {

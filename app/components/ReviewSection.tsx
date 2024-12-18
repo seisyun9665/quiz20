@@ -10,7 +10,7 @@ type ReviewSectionProps = {
         answer: string;
         explanation: string;
     }[];
-    userAnswers: string[];
+    userAnswers: { answer: string, isCorrect: boolean }[];
     onBack: () => void;
 };
 
@@ -52,7 +52,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
                                 <div className="flex items-start sm:items-center gap-2 sm:gap-3">
                                     <span className="text-gray-500 w-24 sm:w-28 text-sm sm:text-base">あなたの回答:</span>
                                     <span className="text-gray-800 text-sm sm:text-base">
-                                        {userAnswers[index] ? userAnswers[index] : 
+                                        {userAnswers[index] ? userAnswers[index].answer : 
                                             <span className="text-gray-400 italic">回答なし</span>
                                         }
                                     </span>
@@ -63,14 +63,14 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
                                 </div>
                                 <div className={`inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm
                                     ${!userAnswers[index] ? "bg-gray-50 text-gray-500" :
-                                      userAnswers[index] === question.answer 
+                                      userAnswers[index].isCorrect 
                                         ? "bg-green-50 text-green-600" 
                                         : "bg-red-50 text-red-600"}`
                                 }>
                                     <span>{!userAnswers[index] ? "⚪" : 
-                                          userAnswers[index] === question.answer ? "✅" : "❌"}</span>
+                                          userAnswers[index].isCorrect ? "✅" : "❌"}</span>
                                     <span>{!userAnswers[index] ? "未回答" :
-                                          userAnswers[index] === question.answer ? "正解" : "不正解"}</span>
+                                          userAnswers[index].isCorrect ? "正解" : "不正解"}</span>
                                 </div>
                             </div>
 

@@ -4,8 +4,11 @@ import React from 'react';
 import { QuestionList } from '../components/QuestionList';
 import { quizData } from '../quizData';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const QuestionsPage: React.FC = () => {
+    const router = useRouter();
+
     return (
         <div className="min-h-screen bg-white py-8 px-4">
             <div className="max-w-4xl mx-auto">
@@ -22,7 +25,7 @@ const QuestionsPage: React.FC = () => {
                     <QuestionList
                         questions={quizData}
                         onStartFromQuestion={(index) => {
-                            window.location.href = `/quiz?start=${index}`;
+                            router.push(`/quiz?start=${index}`);
                         }}
                     />
                 </div>

@@ -5,13 +5,11 @@ type QuestionListProps = {
         explanation: string;
     }[];
     onStartFromQuestion: (index: number) => void;
-    previousAnswers?: string[];
 };
 
 export const QuestionList: React.FC<QuestionListProps> = ({
     questions,
     onStartFromQuestion,
-    previousAnswers = []
 }) => {
     return (
         <div className="max-w-4xl mx-auto sm:px-4 py-6 sm:p-6">
@@ -32,13 +30,6 @@ export const QuestionList: React.FC<QuestionListProps> = ({
                         </div>
 
                         <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                            {previousAnswers[index] && (
-                                <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full 
-                                    bg-yellow-50 text-yellow-600 text-xs sm:text-sm border border-yellow-200">
-                                    <span>📝</span>
-                                    <span>前回の回答あり</span>
-                                </div>
-                            )}
                             <button
                                 onClick={() => onStartFromQuestion(index)}
                                 className="w-full sm:w-auto px-4 py-3 sm:py-2 text-base sm:text-lg font-medium 
