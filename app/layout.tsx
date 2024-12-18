@@ -15,6 +15,27 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "クイズアプリ",
   description: "学習のためのクイズアプリケーション",
+  openGraph: {
+    title: 'クイズアプリ',
+    description: '学習のためのクイズアプリケーション',
+    type: 'website',
+    locale: 'ja_JP',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'クイズアプリ プレビュー画像',
+      },
+    ],
+    siteName: 'クイズアプリ',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'クイズアプリ',
+    description: '学習のためのクイズアプリケーション',
+    images: ['/og-image.png'],
+  },
 };
 
 export default function RootLayout({

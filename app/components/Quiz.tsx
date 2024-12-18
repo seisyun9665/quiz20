@@ -103,7 +103,7 @@ const Quiz: React.FC<QuizProps> = ({ initialQuestionIndex = 0 }) => {
                             クイズを中断しますか？
                         </h3>
                         <p className="text-lg text-gray-700 mb-6">
-                            進捗は保存されません。最初からやり直すことになります。
+                            トップページに戻りますか？中断しても進捗は保存されます。
                         </p>
                         <div className="flex gap-4">
                             <button

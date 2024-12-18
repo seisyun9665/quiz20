@@ -58,11 +58,11 @@ export const ScoreRanking: React.FC = () => {
         <div className="text-xs sm:text-sm text-gray-600">令和5年度 一般常識テスト</div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {topScores.map((score, index) => (
           <div 
             key={score.id} 
-            className={`p-4 sm:p-8 rounded-lg border-2 ${
+            className={`p-6 sm:p-8 rounded-lg border-2 ${
               index === 0 ? 'border-yellow-200 bg-yellow-50' :
               index === 1 ? 'border-gray-200 bg-gray-50' :
               'border-amber-100 bg-amber-50'
@@ -70,7 +70,7 @@ export const ScoreRanking: React.FC = () => {
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-8">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                <div className="w-full sm:w-32 flex-shrink-0">{getAward(index + 1)}</div>
+                <div className="w-full sm:w-48 flex-shrink-0">{getAward(index + 1)}</div>
                 <div className="text-lg sm:text-2xl font-bold text-gray-700">
                   {score.playerName} さん
                 </div>
@@ -97,7 +97,7 @@ export const ScoreRanking: React.FC = () => {
               >
                 <div className="flex items-center gap-3 sm:gap-4 text-gray-700">
                   <div className="w-16 sm:w-20 text-gray-500 text-right">{index + 4}位</div>
-                  <div className="font-medium">{score.playerName} さん</div>
+                  <div className="font-medium sm:min-w-[200px]">{score.playerName} さん</div>
                 </div>
                 <div className="text-gray-600 mt-1 sm:mt-0 ml-20 sm:ml-0">
                   {score.score}問正解

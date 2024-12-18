@@ -42,15 +42,17 @@ const Home: React.FC = () => {
                 <div className="flex justify-center gap-4 mt-8">
                     <Link
                         href="/ranking"
-                        className="px-6 py-2 bg-yellow-50 text-yellow-600 rounded-full
-                            hover:bg-yellow-100 transition-all border border-yellow-200"
+                        className="px-6 py-3 bg-yellow-100 text-yellow-700 rounded-full
+                            hover:bg-yellow-200 transition-all border-2 border-yellow-300
+                            font-medium shadow-sm hover:shadow-md"
                     >
                         成績優秀者一覧
                     </Link>
                     <Link
                         href="/needs-study"
-                        className="px-6 py-2 bg-red-50 text-red-600 rounded-full
-                            hover:bg-red-100 transition-all border border-red-200"
+                        className="px-6 py-3 bg-red-100 text-red-700 rounded-full
+                            hover:bg-red-200 transition-all border-2 border-red-300
+                            font-medium shadow-sm hover:shadow-md"
                     >
                         要復習者一覧
                     </Link>
