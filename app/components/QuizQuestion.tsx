@@ -31,12 +31,13 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 }) => {
     const [textAnswer, setTextAnswer] = useState('');
     const [selfJudgment, setSelfJudgment] = useState<boolean | null>(null);
+    const [isChecking, setIsChecking] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!textAnswer.trim()) return;
         
-        console.log('Submitting answer:', { textAnswer, correctAnswer });
+        setIsChecking(true);
         
         try {
             console.log('Calling checkAnswer...');
@@ -48,13 +49,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             onSubmit();
         } catch (error) {
             console.error('Answer check failed:', error);
-            // エラーの場合は通常の完全一致で判定
             const isCorrect = textAnswer.trim() === correctAnswer.trim();
             console.log('Fallback check result:', { isCorrect });
             
             onAnswer(textAnswer, isCorrect);
             setSelfJudgment(isCorrect);
             onSubmit();
+        } finally {
+            setIsChecking(false);
         }
     };
 
@@ -89,17 +91,28 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                                     : 'border-gray-300 focus:border-primary focus:ring-primary/20'
                             }`}
                         placeholder="答えを入力してください"
-                        disabled={showFeedback}
+                        disabled={showFeedback || isChecking}
                     />
-                    <button
-                        type="submit"
-                        disabled={showFeedback || !textAnswer.trim()}
-                        className="w-full py-3 px-4 sm:py-4 sm:px-6 text-base sm:text-lg font-medium bg-primary text-white rounded-lg 
-                            hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed
-                            shadow-md hover:shadow-lg transition-all"
-                    >
-                        回答する
-                    </button>
+                    {isChecking ? (
+                        <div className="flex items-center justify-center gap-3 py-3 px-4 text-base sm:text-lg font-medium bg-gray-100 text-gray-600 rounded-lg">
+                            <div className="flex gap-1.5">
+                                <div className="w-2.5 h-2.5 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                <div className="w-2.5 h-2.5 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                <div className="w-2.5 h-2.5 bg-gray-600 rounded-full animate-bounce"></div>
+                            </div>
+                            <span>答え合わせ中...</span>
+                        </div>
+                    ) : (
+                        <button
+                            type="submit"
+                            disabled={showFeedback || !textAnswer.trim()}
+                            className="w-full py-3 px-4 sm:py-4 sm:px-6 text-base sm:text-lg font-medium bg-primary text-white rounded-lg 
+                                hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed
+                                shadow-md hover:shadow-lg transition-all"
+                        >
+                            回答する
+                        </button>
+                    )}
                 </form>
             )}
 

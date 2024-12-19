@@ -196,14 +196,12 @@ export const QuizResult: React.FC<QuizResultProps> = ({
       {/* アクションボタン */}
       <div className="mt-8 space-y-4">
         <button onClick={onReview} className="w-full p-4 text-lg font-medium bg-white text-primary border-2 border-primary rounded-lg hover:bg-primary/5">
-          回答・解説を見る
+          回答・解説
         </button>
-        {/* <button onClick={onRetry} className="w-full p-4 text-lg font-medium bg-white text-gray-600 border-2 border-gray-300 rounded-lg hover:bg-gray-50">
-          もう一回挑戦する
-        </button> */}
-        <Link href="/needs-study" className="block w-full">
-          <button className="w-full p-4 text-lg font-medium bg-white text-red-500 border-2 border-red-200 rounded-lg hover:bg-red-50">
-            要復習者一覧を見る
+        <Link href="/ranking" className="block w-full">
+          <button className="w-full p-4 text-lg font-medium bg-white text-orange-500 border-2 border-orange-500 rounded-lg 
+            hover:bg-orange-50 transition-colors flex items-center justify-center gap-2">
+            <span>ランキング</span>
           </button>
         </Link>
       </div>

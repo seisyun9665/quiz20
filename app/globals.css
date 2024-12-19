@@ -76,7 +76,7 @@ body {
   font-weight: bold;
 }
 
-/* プログ���スバーのスタイル */
+/* プログスバーのスタイル */
 .progress-bar {
   width: 100%;
   height: 0.5rem;
@@ -202,4 +202,17 @@ body {
   .bg-error\/10 {
     background-color: rgba(var(--error-rgb), 0.1);
   }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
