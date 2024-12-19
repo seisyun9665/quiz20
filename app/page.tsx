@@ -1,10 +1,29 @@
 // app/page.tsx
 import React from 'react';
 import Link from 'next/link';
+import admin from './admin/page';
 
 const Home: React.FC = () => {
     return (
         <div className="min-h-screen bg-white py-8 px-4">
+            <div className="fixed top-2 left-2">
+                <Link
+                    href="/admin"
+                    className="p-4 text-transparent hover:text-gray-400 transition-colors duration-500
+                        rounded-lg opacity-20 hover:opacity-100"
+                    aria-label="管理者ページ"
+                >
+                    <svg 
+                        className="w-5 h-5" 
+                        fill="currentColor" 
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    </svg>
+                </Link>
+            </div>
+
             <div className="max-w-4xl mx-auto">
                 <h1 className="text-5xl font-bold text-center mb-12 text-primary">一般常識クイズ</h1>
                 <div className="bg-white rounded-xl shadow-xl p-8">

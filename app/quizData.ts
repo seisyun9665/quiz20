@@ -95,7 +95,7 @@ export const quizData: QuizQuestion[] = [
   {
     question: "2024年に世界文化遺産に登録された、新潟県にある金鉱山跡の名称は？",
     type: "text",
-    answer: "佐渡金山",
+    answer: "佐渡の金山",
     explanation: "2024年に世界文化遺産に登録された金鉱山跡"
   },
   {
@@ -119,8 +119,8 @@ export const quizData: QuizQuestion[] = [
   {
     question: "2024年10月に就任した日本の新しい首相の名前は？",
     type: "text",
-    answer: "岸田文雄",
-    explanation: "2024年も引き続き首相を務めている"
+    answer: "石破茂",
+    explanation: "石破茂は第102代の総理大臣として選出され、10月1日に正式に新内閣が発足しました"
   },
   {
     question: "東海道新幹線が開通してから2024年で何年になったか？",

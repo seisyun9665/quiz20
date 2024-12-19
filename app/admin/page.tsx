@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { scoreService } from '../services/scoreService';
+import Link from 'next/link';
 
 interface ScoreFormData {
   playerName: string;
@@ -211,6 +212,12 @@ export default function AdminPage() {
         </div>
 
         <div className="flex gap-2 mb-6">
+          <Link href="/"
+            className="px-4 py-2 text-primary border border-primary rounded-lg
+              hover:bg-primary/5 transition-colors"
+          >
+            トップページへ
+          </Link>
           <button
             onClick={() => setActiveTab('scores')}
             className={`px-4 py-2 rounded-lg transition-all ${
