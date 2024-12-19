@@ -12,7 +12,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NODE_ENV === 'production'
+  ? 'https://quiz20-a466c.web.app'
+  : 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(baseUrl),
   title: "クイズアプリ",
   description: "学習のためのクイズアプリケーション",
   openGraph: {

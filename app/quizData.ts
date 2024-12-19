@@ -23,7 +23,7 @@ export const quizData: QuizQuestion[] = [
   {
     question: "地球の大気中で最も多い気体は何か？",
     type: "text",
-    answer: "窒素",
+    answer: "窒素(ちっそ)",
     explanation: "大気中の約78%を占める気体（N2）"
   },
   {
@@ -41,25 +41,25 @@ export const quizData: QuizQuestion[] = [
   {
     question: "日本の四大公害病のうち、熊本県で発生したものは何か？",
     type: "text",
-    answer: "水俣病",
+    answer: "水俣病（みなまたびょう）",
     explanation: "チッソ株式会社による有機水銀汚染が原因"
   },
   {
     question: "次の英文を和訳せよ：「The early bird catches the worm.」",
     type: "text",
-    answer: "早起きは三文の得",
+    answer: "早起きは三文の得（はやおきはさんもんのとく）",
     explanation: "直訳：「早起きの鳥は虫を捕まえる」という意味の英語の格言"
   },
   {
     question: "平安時代に書かれた「源氏物語」の作者は誰か？",
     type: "text",
-    answer: "紫式部",
+    answer: "紫式部（むらさきしきぶ）",
     explanation: "平安時代中期の女性作家。世界最古の長編小説とされる源氏物語を執筆"
   },
   {
     question: "人体の血液型で最も珍しいとされるのは何型か？",
     type: "text",
-    answer: "AB型",
+    answer: "AB型（えーびーがた）",
     explanation: "日本人の約10%程度、世界的にも最も珍しい血液型"
   },
   {
@@ -71,13 +71,13 @@ export const quizData: QuizQuestion[] = [
   {
     question: "2024年7月から発行された新紙幣の1万円札に描かれている人物は誰か？",
     type: "text",
-    answer: "渋沢栄一",
+    answer: "渋沢栄一（しぶさわえいいち）",
     explanation: "渋沢栄一は明治時代の実業家で、新紙幣の1万円札に描かれている"
   },
   {
     question: "2024年1月に発生し、大きな被害をもたらした地震の震源地となった半島の名前は？",
     type: "text",
-    answer: "能登半島",
+    answer: "能登半島（のとはんとう）",
     explanation: "2024年1月1日に発生した最大震度7の地震の震源地"
   },
   {
@@ -89,37 +89,37 @@ export const quizData: QuizQuestion[] = [
   {
     question: "日本の47都道府県のうち、最も面積が小さいのはどこか？",
     type: "text",
-    answer: "香川県",
+    answer: "香川県（かがわけん）",
     explanation: "面積1,877km²で日本で最も小さい都道府県"
   },
   {
     question: "2024年に世界文化遺産に登録された、新潟県にある金鉱山跡の名称は？",
     type: "text",
-    answer: "佐渡の金山",
+    answer: "佐渡の金山（さどのきんざん）",
     explanation: "2024年に世界文化遺産に登録された金鉱山跡"
   },
   {
     question: "2024年の日本の出生数が過去最低を記録したが、この現象を表す言葉は何か？",
     type: "text",
-    answer: "少子化",
+    answer: "少子化（しょうしか）",
     explanation: "出生数の急激な減少を指す現象"
   },
   {
     question: "次の英文を和訳せよ：「Actions speak louder than words.」",
     type: "text",
-    answer: "行動は言葉よりも雄弁だ",
+    answer: "行動は言葉よりも雄弁だ（こうどうはことばよりもゆうべんだ）",
     explanation: "実際の行動の方が言葉より重要であることを表す格言"
   },
   {
     question: "日本で最も高い山は富士山ですが、2番目に高い山は何か？",
     type: "text",
-    answer: "北岳",
+    answer: "北岳（きただけ）",
     explanation: "富士山に次いで日本で2番目に高い山（3,193m）"
   },
   {
-    question: "2024年10月に就任した日本の新しい首相の名前は？",
+    question: "2024年10月に就任した日本の新しい首相の名前をフルネームで答えよ。",
     type: "text",
-    answer: "石破茂",
+    answer: "石破茂（いしばしげる）",
     explanation: "石破茂は第102代の総理大臣として選出され、10月1日に正式に新内閣が発足しました"
   },
   {

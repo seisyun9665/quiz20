@@ -1,5 +1,8 @@
 // app/components/QuizQuestion.tsx
+'use client'
+
 import React, { useState } from 'react';
+import { checkAnswer } from '../lib/groq';
 
 type QuizQuestionProps = {
     question: string;
@@ -29,9 +32,30 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     const [textAnswer, setTextAnswer] = useState('');
     const [selfJudgment, setSelfJudgment] = useState<boolean | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit();
+        if (!textAnswer.trim()) return;
+        
+        console.log('Submitting answer:', { textAnswer, correctAnswer });
+        
+        try {
+            console.log('Calling checkAnswer...');
+            const result = await checkAnswer(textAnswer, correctAnswer);
+            console.log('checkAnswer result:', result);
+            
+            onAnswer(textAnswer, result.isCorrect);
+            setSelfJudgment(result.isCorrect);
+            onSubmit();
+        } catch (error) {
+            console.error('Answer check failed:', error);
+            // エラーの場合は通常の完全一致で判定
+            const isCorrect = textAnswer.trim() === correctAnswer.trim();
+            console.log('Fallback check result:', { isCorrect });
+            
+            onAnswer(textAnswer, isCorrect);
+            setSelfJudgment(isCorrect);
+            onSubmit();
+        }
     };
 
     const handleAnswer = (bool: boolean) => {
