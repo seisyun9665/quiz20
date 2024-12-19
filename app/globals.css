@@ -3,12 +3,16 @@
 @tailwind utilities;
 
 :root {
+  --success-rgb: 34, 197, 94;
+  --error-rgb: 239, 68, 68;
+  --primary-rgb: 59, 130, 246;
+
   --background: #ffffff;
   --foreground: #333333;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --success: #22c55e;
-  --error: #ef4444;
+  --primary: rgb(var(--primary-rgb));
+  --primary-hover: rgb(var(--primary-rgb), 0.9);
+  --success: rgb(var(--success-rgb));
+  --error: rgb(var(--error-rgb));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,7 +76,7 @@ body {
   font-weight: bold;
 }
 
-/* プログレスバーのスタイル */
+/* プログ���スバーのスタイル */
 .progress-bar {
   width: 100%;
   height: 0.5rem;
@@ -187,4 +191,15 @@ body {
   animation: floatingHeart 1s ease-out forwards;
   font-size: 1.5rem;
   transform-origin: center;
+}
+
+/* Tailwindのopacityユーティリティと連携するためのカスタムユーティリティ */
+@layer utilities {
+  .bg-success\/10 {
+    background-color: rgba(var(--success-rgb), 0.1);
+  }
+  
+  .bg-error\/10 {
+    background-color: rgba(var(--error-rgb), 0.1);
+  }
 }

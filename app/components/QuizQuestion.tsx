@@ -40,7 +40,13 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     };
 
     return (
-        <div className="animate-fade-in-fast">
+        <div className={`animate-fade-in-fast rounded-xl p-6 transition-colors duration-300 ${
+            showFeedback && selfJudgment !== null 
+                ? selfJudgment 
+                    ? 'bg-success/10' 
+                    : 'bg-error/10'
+                : ''
+        }`}>
             <h2 className="text-2xl font-bold mb-8 text-center text-gray-800">{question}</h2>
             
             {type === 'text' && (
@@ -49,9 +55,15 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                         type="text"
                         value={textAnswer}
                         onChange={(e) => setTextAnswer(e.target.value)}
-                        className="w-full p-4 text-lg border-2 border-gray-300 rounded-lg 
-                            focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20
-                            bg-white text-gray-800"
+                        className={`w-full p-4 text-lg border-2 rounded-lg 
+                            focus:outline-none focus:ring-2
+                            bg-white text-gray-800 transition-colors duration-300 ${
+                                showFeedback && selfJudgment !== null
+                                    ? selfJudgment
+                                        ? 'border-success focus:border-success focus:ring-success/20'
+                                        : 'border-error focus:border-error focus:ring-error/20'
+                                    : 'border-gray-300 focus:border-primary focus:ring-primary/20'
+                            }`}
                         placeholder="答えを入力してください"
                         disabled={showFeedback}
                     />
@@ -67,44 +79,51 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 </form>
             )}
 
-            {showFeedback && selfJudgment === null && (
-                <div className="mt-6 space-y-4">
-                    <div className="text-xl font-bold text-center text-gray-800">
-                        正解を確認してください
+            {showFeedback && (
+                <>
+                    {selfJudgment === null && (
+                        <div className="text-xl font-bold text-center text-gray-800">
+                            正解を確認してください
+                        </div>
+                    )}
+                    <div className="mt-6 space-y-4">
+                        <div className="text-lg text-center text-gray-800">
+                            <span className="font-medium">正解: </span>
+                            <span className="text-primary">{correctAnswer}</span>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                            <p className="text-gray-700">
+                                <span className="font-medium">解説: </span>
+                                {explanation}
+                            </p>
+                        </div>
+
+                        {selfJudgment === null && (
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => handleAnswer(true)}
+                                    className="flex-1 p-4 text-lg font-medium bg-success text-white rounded-lg 
+                                        hover:bg-success/90 shadow-md hover:shadow-lg transition-all"
+                                >
+                                    正解！
+                                </button>
+                                <button
+                                    onClick={() => handleAnswer(false)}
+                                    className="flex-1 p-4 text-lg font-medium bg-error text-white rounded-lg 
+                                        hover:bg-error/90 shadow-md hover:shadow-lg transition-all"
+                                >
+                                    不正解...
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    <div className="text-lg text-center text-gray-800">
-                        <span className="font-medium">正解: </span>
-                        <span className="text-primary">{correctAnswer}</span>
-                    </div>
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => handleAnswer(true)}
-                            className="flex-1 p-4 text-lg font-medium bg-success text-white rounded-lg 
-                                hover:bg-success/90 shadow-md hover:shadow-lg transition-all"
-                        >
-                            正解！
-                        </button>
-                        <button
-                            onClick={() => handleAnswer(false)}
-                            className="flex-1 p-4 text-lg font-medium bg-error text-white rounded-lg 
-                                hover:bg-error/90 shadow-md hover:shadow-lg transition-all"
-                        >
-                            不正解...
-                        </button>
-                    </div>
-                </div>
+                </>
             )}
 
             {showFeedback && selfJudgment !== null && (
                 <div className="mt-6 space-y-4">
                     <div className={`text-xl font-bold text-center ${selfJudgment ? 'text-success' : 'text-error'}`}>
                         {selfJudgment ? '正解！' : '不正解...'}
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                        <p className="text-gray-700">
-                            <span className="font-medium">解説: </span>
-                            {explanation}
-                        </p>
                     </div>
                     <button
                         onClick={onNext}

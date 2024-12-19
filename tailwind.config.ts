@@ -11,10 +11,22 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "var(--primary)",
-        "primary-hover": "var(--primary-hover)",
-        success: "var(--success)",
-        error: "var(--error)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          hover: "var(--primary-hover)",
+        },
+        success: {
+          DEFAULT: "var(--success)",
+          '10': 'rgba(34, 197, 94, 0.1)',  // 薄い緑
+          '20': 'rgba(34, 197, 94, 0.2)',
+          '90': 'rgba(34, 197, 94, 0.9)',
+        },
+        error: {
+          DEFAULT: "var(--error)",
+          '10': 'rgba(239, 68, 68, 0.1)',  // 薄い赤
+          '20': 'rgba(239, 68, 68, 0.2)',
+          '90': 'rgba(239, 68, 68, 0.9)',
+        },
       },
       keyframes: {
         tada: {
